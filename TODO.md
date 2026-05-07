@@ -108,4 +108,6 @@
 
 ---
 
+[ ] - Count the Omer!
+
 **Last Updated**: February 19, 2026
