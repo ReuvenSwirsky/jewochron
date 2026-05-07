@@ -1104,6 +1104,7 @@ namespace Jewochron.Views
                 // Check for upcoming yahrzeits and simchas
                 await LoadYahrzeitsAsync();
                 await LoadSimchasAsync();
+                LoadOmerCard(now);
             }
             catch (Exception ex)
             {
@@ -1117,6 +1118,45 @@ namespace Jewochron.Views
             System.Diagnostics.Debug.WriteLine("[YAHRZEIT] RefreshYahrzeitsAsync called");
             await LoadYahrzeitsAsync();
             await LoadSimchasAsync();
+            LoadOmerCard(DateTime.Now);
+        }
+
+        private void LoadOmerCard(DateTime now)
+        {
+            try
+            {
+                var (_, month, day, isLeapYear) = hebrewCalendarService.GetHebrewDate(now);
+                int? omerDay = hebrewCalendarService.GetOmerDay(now);
+                System.Diagnostics.Debug.WriteLine($"[OMER] Hebrew date: month={month} day={day} leapYear={isLeapYear} | OmerDay={omerDay?.ToString() ?? "null"}");
+
+                var omerCard = this.FindName("OmerCard") as Microsoft.UI.Xaml.UIElement;
+                var txtOmerEnglishBlock = this.FindName("txtOmerEnglish") as Microsoft.UI.Xaml.Controls.TextBlock;
+                var txtOmerHebrewBlock = this.FindName("txtOmerHebrew") as Microsoft.UI.Xaml.Controls.TextBlock;
+
+                System.Diagnostics.Debug.WriteLine($"[OMER] FindName results: OmerCard={omerCard != null} txtOmerEnglish={txtOmerEnglishBlock != null} txtOmerHebrew={txtOmerHebrewBlock != null}");
+
+                if (omerCard == null || txtOmerEnglishBlock == null || txtOmerHebrewBlock == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("[OMER] ERROR: One or more Omer card elements not found in XAML");
+                    return;
+                }
+
+                if (!omerDay.HasValue)
+                {
+                    omerCard.Visibility = Visibility.Collapsed;
+                    System.Diagnostics.Debug.WriteLine("[OMER] Not in Omer period - card hidden");
+                    return;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[OMER] Showing card for Omer day {omerDay.Value}");
+                omerCard.Visibility = Visibility.Visible;
+                txtOmerEnglishBlock.Text = $"Day {omerDay.Value} of the Omer";
+                txtOmerHebrewBlock.Text = $"היום {hebrewCalendarService.ConvertToHebrewNumber(omerDay.Value)} לעומר";
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[OMER] Error loading Omer card: {ex.Message}");
+            }
         }
 
         private async Task LoadYahrzeitsAsync()
@@ -1652,7 +1692,7 @@ namespace Jewochron.Views
                 {"AZ", "אריזונה"},
                 {"MA", "מסצ'וסטס"},
                 {"TN", "טנסי"},
-                {"IN", "אינדיאנה"},
+                {"IN", "אינדיאנפוליס"},
                 {"MO", "מיזורי"},
                 {"MD", "מרילנד"},
                 {"WI", "ויסקונסין"},

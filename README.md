@@ -80,6 +80,20 @@ A beautiful, fully responsive WinUI 3 desktop application that displays Jewish c
   - SVG templates included for customization
   - Icon generation tools for easy updates
 
+### 🌾 Sefirat HaOmer
+- **Omer Counter Card**: Automatically displayed during the 49-day Omer period (16 Nisan – 5 Sivan)
+  - Shows the current day of the Omer in English and Hebrew
+  - Decorative wheat-sheaf artwork on a dark green gradient card
+  - Card is hidden outside the Omer period — no clutter year-round
+
+### 🎉 Simcha Manager
+- **Built-in Web Interface**: Track Jewish lifecycle celebrations via browser
+  - Accessible at `http://localhost:5555/simchas` when app is running
+  - Add Bar/Bat Mitzvahs, weddings, anniversaries, Hebrew birthdays, and other simchas
+  - Enter dates in either the **Gregorian or Hebrew calendar** — Gregorian dates are automatically converted to Hebrew before saving
+  - Only Hebrew dates are stored, ensuring calendar accuracy across years
+  - SQLite database (zero configuration, embedded)
+
 ### 📖 Yahrzeit Manager
 - **Built-in Web Interface**: Manage memorial anniversaries via browser
   - Accessible at `http://localhost:5555` when app is running
@@ -87,9 +101,9 @@ A beautiful, fully responsive WinUI 3 desktop application that displays Jewish c
   - Store Hebrew dates with bilingual names
   - SQLite database (zero configuration, embedded)
 
-## Yahrzeit Web Interface
+## Web Interface
 
-The application includes an embedded web server for managing yahrzeit (memorial anniversary) dates.
+The application includes an embedded web server for managing Yahrzeits and Simchas.
 
 ### Accessing the WebUI
 
@@ -97,15 +111,26 @@ The application includes an embedded web server for managing yahrzeit (memorial 
 2. **Open your web browser** (Chrome, Edge, Firefox, Safari)
 3. **Navigate to:** `http://localhost:5555`
 
-### Features
+You will be presented with the **Settings Menu** — a central hub to navigate to:
+- **Yahrzeits** — Memorial anniversary management
+- **Simchas** — Jewish lifecycle celebration management
+
+### Yahrzeit Features
 
 - ✅ **Add Yahrzeits**: Enter Hebrew month, day, year, and names in English and Hebrew
 - ✅ **View All**: See all saved yahrzeits sorted by Hebrew date
 - ✅ **Edit Entries**: Modify existing yahrzeit information
 - ✅ **Delete Entries**: Remove yahrzeits with confirmation
-- ✅ **Beautiful UI**: Modern purple-gradient design with responsive layout
 - ✅ **Hebrew Support**: Right-to-left text input for Hebrew names
 - ✅ **Zero Setup**: No database installation required - uses embedded SQLite
+
+### Simcha Features
+
+- ✅ **Add Simchas**: Enter Bar/Bat Mitzvahs, weddings, anniversaries, Hebrew birthdays, and more
+- ✅ **Dual Date Entry**: Input in Gregorian or Hebrew calendar — Gregorian is auto-converted to Hebrew before saving
+- ✅ **Hebrew-Only Storage**: Only the Hebrew date is persisted for accurate year-after-year recurrence
+- ✅ **Hebrew Support**: Right-to-left text input for Hebrew names
+- ✅ **Zero Setup**: Shares the embedded SQLite infrastructure
 
 ### Database Location
 
@@ -144,7 +169,7 @@ The application has been refactored into a modular architecture:
 
 ### Services Layer (`Services/`)
 
-- **HebrewCalendarService.cs**: Hebrew date conversions, Hebrew numeral formatting, and Shabbat detection
+- **HebrewCalendarService.cs**: Hebrew date conversions, Hebrew numeral formatting, Shabbat detection, and Sefirat HaOmer day calculation
 - **TorahPortionService.cs**: Calculates current Torah portion based on Hebrew calendar
 - **DafYomiService.cs**: Calculates current Daf Yomi page with Hebrew formatting
 - **HalachicTimesService.cs**: Location-based Halachic time calculations (sunrise, sunset, dawn, nightfall)
@@ -152,6 +177,8 @@ The application has been refactored into a modular architecture:
 - **MoladService.cs**: Calculates next Molad (new moon) with exact time, Chalakim, and Rosh Chodesh information
 - **JewishHolidaysService.cs**: Tracks upcoming Jewish holidays with countdown
 - **LocationService.cs**: Geolocation and reverse geocoding
+- **YahrzeitWebServer.cs**: Embedded ASP.NET Core WebUI serving the settings menu, Yahrzeit manager, and Simcha manager
+- **SimchaDbContext.cs / YahrzeitDbContext.cs**: EF Core + SQLite persistence for Simchas and Yahrzeits
 
 ### UI Layer (`Views/`)
 

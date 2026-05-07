@@ -107,6 +107,32 @@ namespace Jewochron.Services
             return date.DayOfWeek == DayOfWeek.Saturday;
         }
 
+        public int? GetOmerDay(DateTime date)
+        {
+            var (_, month, day, isLeapYear) = GetHebrewDate(date);
+
+            int nisanMonth = isLeapYear ? 8 : 7;
+            int iyarMonth = isLeapYear ? 9 : 8;
+            int sivanMonth = isLeapYear ? 10 : 9;
+
+            if (month == nisanMonth && day >= 16 && day <= 30)
+            {
+                return day - 15;
+            }
+
+            if (month == iyarMonth)
+            {
+                return 15 + day;
+            }
+
+            if (month == sivanMonth && day >= 1 && day <= 5)
+            {
+                return 44 + day;
+            }
+
+            return null;
+        }
+
         public (int day, int month, int year)? ConvertToHebrewDate(DateTime gregorianDate)
         {
             try
